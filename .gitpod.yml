@@ -1,0 +1,9 @@
+
+tasks:
+  - init: python3.11 install
+
+github:
+  prebuilds:
+    master: true
+    branches: true
+    pullRequests: true 
