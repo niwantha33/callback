@@ -1,7 +1,6 @@
 
 tasks:
-  - init: python3.11 install
-
+  - init: apt-get install python3.11
 github:
   prebuilds:
     master: true
