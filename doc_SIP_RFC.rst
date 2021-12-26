@@ -6,12 +6,12 @@ EDITED V2  :
 Descriptions: [RFC6910]
 MAJOR RELEASE   :   
 !<-------------------------------->!
-SIP :RFC
-1)  RFC1889 - RTP & QoS
-2)  RFC2325 - RTPSP (Controlling)
-3)  RFC3015 - Media Gateway Control Protocol (For PSTN)
-4)  RFC2327 - Session Description Protocol (SDP)
-5)  RFC3261 - Header Details ############### https://datatracker.ietf.org/doc/html/rfc3261#section-20
+@section{SIP :RFC}
++ 1)  RFC1889 - RTP & QoS
++ 2)  RFC2325 - RTPSP (Controlling)
++ 3)  RFC3015 - Media Gateway Control Protocol (For PSTN)
++ 4)  RFC2327 - Session Description Protocol (SDP)
++ 5)  RFC3261 - Header Details ############### https://datatracker.ietf.org/doc/html/rfc3261#section-20
 
 #SIP URI: (HTTP-like request/response transaction model)
         sip:user@host_name
@@ -97,6 +97,4 @@ SIP :RFC
                     Everywhere) SHOULD be used if the client knows that no other end
                     system will be able to accept this call.
 
-
-    """
 
