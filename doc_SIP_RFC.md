@@ -14,6 +14,15 @@ MAJOR RELEASE   :
  4.  RFC2327 - Session Description Protocol (SDP)
  5.  RFC3261 - Header Details ############### https://datatracker.ietf.org/doc/html/rfc3261#section-20
 
+
+## RFC6910 Completion of Calls for the Session Initiation Protocol (SIP)
+
+```
+
+   The "completion of calls" feature defined in this specification
+   allows the caller of a failed call to be notified when the callee
+   becomes available to receive a call.
+   ```
 ## SIP URI: (HTTP-like request/response transaction model)
         sip:user@host_name
 
