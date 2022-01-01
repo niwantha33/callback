@@ -35,10 +35,13 @@ class SipServer:
         self.sel.register(fd, selectors.EVENT_READ, self.read)
 
     def read(self, sock,mask):
+        sent:int = 0
         data = sock.recv(1000)  # Should be ready
         if data:
             print('echoing', repr(data), 'to', sock)
-            sock.send(data)  # Hope it won't block
+            sent = sock.send(data)  # Hope it won't block
+            if sent == 0:
+                raise RuntimeError("socket connection broken")
         else:
             print('closing', sock)
             self.sel.unregister(sock)
