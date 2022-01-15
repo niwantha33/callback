@@ -2,9 +2,7 @@
 
 """
 Author: (NIWANTHA MEEPAGE) 
-Date:   10th Sep 2021
-EDITED V1  :   13Th Sep 2021
-EDITED V2  :   27Th Sep 2021  [THIS IS SECOND CRON IN ORDER TO PROCESS TX RX ]
+EDITED v1.9.3  :   7Th Jan 2022  [PROCESS TX RX ]
 Descriptions: [RFC6910]
 MAJOR RELEASE   :   v1.9.3
 !<-------------------------------->!
@@ -19,7 +17,7 @@ SIP URI: (HTTP-like request/response transaction model)
         sip:user@host_name
 
 
-        Via:    contains the address of #local_host# at which "NEC" is
+        Via:    contains the address of #local_host# at which "ANY" is
                 expecting to receive responses to this request.  It also contains a
                 branch parameter that identifies this transaction
 
@@ -52,14 +50,14 @@ SIP URI: (HTTP-like request/response transaction model)
 
                     The combination of the To tag, From tag,
                     and Call-ID completely defines a peer-to-peer SIP relationship
-                    between NEC and MITEL and is referred to as a dialog.
+                    between "ANY" and MITEL and is referred to as a dialog.
 
         CSeq:   or Command Sequence contains an integer and a method name.  The
                 CSeq number is incremented for each new request within a dialog and
                 is a traditional sequence number
 
         Contact:    contains a SIP or SIPS URI that represents a direct route to
-                    contact NEC, usually composed of a username at a fully qualified
+                    contact "ANY", usually composed of a username at a fully qualified
                     domain name (FQDN).  While an FQDN is preferred, many end systems do
                     not have registered domain names, so IP addresses are permitted.
 
@@ -131,7 +129,7 @@ RECV_BUF_SIZE = 4096
 
 #!<-------------------SIP HEADER DETAILS---------->!
 # REMOTE_EXT = 12000 # Variable
-REMOTE_IP_MITEL = '10.30.44.71'  # '127.0.0.1'#'10.30.44.71'
+REMOTE_IP_MITEL = '192.168.1.250'  # '127.0.0.1'#'10.30.44.71'
 REMOTE_PORT_MITEL = 5060
 
 USER = 'phone'
@@ -140,20 +138,20 @@ MITEL_TGROUP = 3
 MITEL_CONTEXT = 'mxone-1.test.com'
 
 # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-NEC_PILOT_PORT = 5060
-NEC_PILOT_EXT = 15000  # 15001
-NEC_PILOT_IP = '10.30.44.10'
-NEC_TGROUP = 3
-NEC_CONTEXT = 'nec.test.com'
+ANY_PILOT_PORT = 5060
+ANY_PILOT_EXT = 15000  # 15001
+ANY_PILOT_IP = '192.168.1.115'
+ANY_TGROUP = 3
+ANY_CONTEXT = 'ANY.test.com'
 # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 CONTENT_LENGHT = 0
 EVENT = 'call-completion'
-CONNECTED_PORT = 0 
+CONANYTED_PORT = 0 
 DEBUG = True
 
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-SOCKT_TYPE  = 'NEC'
+SOCKT_TYPE  = 'ANY'
 FLAP = ' '
 FLAP_M = ' '
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -162,8 +160,8 @@ FLAP_M = ' '
 SIP = {"METHOD": ['INVITE', 'PRACK', 'ACK', 'SUBSCRIBE', 'NOTIFY', 'SIP/2.0 200 OK', 'BYE', 'OPTIONS', 'REFER'],
        "REMOTE_EXT": 'REMOTE_EXT',
        "REMOTE_IP_MITEL": REMOTE_IP_MITEL,
-       "NEC_PILOT_EXT": NEC_PILOT_EXT,
-       "NEC_PILOT_IP": NEC_PILOT_IP,
+       "ANY_PILOT_EXT": ANY_PILOT_EXT,
+       "ANY_PILOT_IP": ANY_PILOT_IP,
        "USER": USER,
        "TRANSPORT": TRANSPORT,
        "MITEL_TGROUP": MITEL_TGROUP,
@@ -171,12 +169,12 @@ SIP = {"METHOD": ['INVITE', 'PRACK', 'ACK', 'SUBSCRIBE', 'NOTIFY', 'SIP/2.0 200 
        "MITEL_TAG": 'MITEL_TAG',
        "MITEL_M": 'MITEL_MSG',
        "MITEL_PURPOSE": 'MITEL_PURPOSE',
-       "NEC_TGROUP": NEC_TGROUP,
-       "NEC_CONTEXT": NEC_CONTEXT,
-       "NEC_BRANCH": 'BRANCH_ID',
+       "ANY_TGROUP": ANY_TGROUP,
+       "ANY_CONTEXT": ANY_CONTEXT,
+       "ANY_BRANCH": 'BRANCH_ID',
        "RINSTANCE": 'REINSTANCE_NO',
-       "NEC_TAG": 'NEC_TAG',
-       "NEC_CALL_ID": 'NEC_CALL_ID',
+       "ANY_TAG": 'ANY_TAG',
+       "ANY_CALL_ID": 'ANY_CALL_ID',
        "CSEQ_NO": 'CSEQ_NO',
        "CSEQ_NOTIFY": 'NOTIFYNO',
        "RACK": 'RACK METHOD',
@@ -188,9 +186,9 @@ SIP = {"METHOD": ['INVITE', 'PRACK', 'ACK', 'SUBSCRIBE', 'NOTIFY', 'SIP/2.0 200 
                     "ALLOW": 'INVITE, OPTIONS, BYE, ACK, CANCEL, INFO, REGISTER, REFER,PRACK, SUBSCRIBE, NOTIFY, MESSAGE, UPDATE, PUBLISH',
                     "CONTENT_TYPE": 'application/call-completion',
                     "SUPPORTED": ['timer', 'replaces', '100rel'],
-                    "USER_AGENT": 'SN9600 NEC SN/17.3.1.1.14',
+                    "USER_AGENT": 'ANYModel ANY SN/17.3.1.1.14',
                     "PRIVACY": 'none;private_none',
-                    "PA_IDENTITY": '<sip:{}@{};tgrp={};trunk-context={}>'.format(NEC_PILOT_EXT, NEC_PILOT_IP, NEC_TGROUP, NEC_CONTEXT),
+                    "PA_IDENTITY": '<sip:{}@{};tgrp={};trunk-context={}>'.format(ANY_PILOT_EXT, ANY_PILOT_IP, ANY_TGROUP, ANY_CONTEXT),
                     "CONTENT_LENGHT": CONTENT_LENGHT,
                     "EVENT": 'call-completion',
                     "M": ['BS', 'NR', 'NL'],
@@ -212,7 +210,7 @@ def debugInfo(info):
         error_ = "{}->{}".format(date_time, info)
         logging.info(error_)
 
-#CALLFILE CREATER AND CALLING REST API OF NEC SYSTEM  - FUNCTION BLOCK - (5):FINAL:AFTER RCV
+#CALLFILE CREATER AND CALLING REST API OF ANY SYSTEM  - FUNCTION BLOCK - (5):FINAL:AFTER RCV
 async def SIP_RCV_READY_UPDATE(callID, cc_SATE):
     #create call file 
     #print("UPDATE MAIN DB AND CREATE CALL ACCOUNT------------")
@@ -221,7 +219,7 @@ async def SIP_RCV_READY_UPDATE(callID, cc_SATE):
 #AFTER DATA STORED (NOTIFY SIP) IN temDIC - FUNCTION BLOCK - (4)-[2]:AFTER RCV
 async def SIP_RCV_NOTIFY_DB_UPDATE(callID, cc_SATE, CSeqNo, CSeqMethod):
     try:
-        conn = sqlite3.connect('callbackMitel.db')
+        conn = sqlite3.conANYt('callbackMitel.db')
         cur = conn.cursor()
     except Exception as e:
         debugInfo(f"CODE LINE:{sys._getframe().f_lineno}->{e}")
@@ -280,7 +278,7 @@ async def SIP_statusUpdate_NOTIFY(rcvList):
 #AFTER DATA STORED (200 OK) IN temDIC - FUNCTION BLOCK - (3)-[2]:AFTER RCV
 async def SIP_200_DB_UPDATE(callid,CSEqMethod,MitelTag):
     try:
-        conn = sqlite3.connect('callbackMitel.db')
+        conn = sqlite3.conANYt('callbackMitel.db')
         cur = conn.cursor()
     except Exception as e:
         debugInfo(f"CODE LINE:{sys._getframe().f_lineno}->{e}")
@@ -329,7 +327,7 @@ async def SIP_dataProcess(data, responseType):
         {'Via': 'SIP/2.0/UDP 10.30.44.10:5060;branch=z9hG4bK-f0e9859ec-9cc5-4a489-8ad3-008768667b561;rport=41886;received=10.30.44.242', 
         'Contact': '<sip:13400@10.30.44.71:5060>', 
         'To': '<sip:13400@10.30.44.71;user=phone;transport=UDP;tgrp=1;trunk-context=mitel.test.com>;tag=40814c42', 
-        'From': '<sip:15001@10.30.44.10>;user=phone;tgrp=1;trunk-context=nec-1.test.com>;tag=9cc594ra48',
+        'From': '<sip:15001@10.30.44.10>;user=phone;tgrp=1;trunk-context=ANY-1.test.com>;tag=9cc594ra48',
          'Call-ID': 'f0ee99859c11', 
          'CSeq': '494113 SUBSCRIBE', 'Expires': '3600', 'User-Agent': 'Aastra MX-ONE SN/17.3.1.1.14', 'Content-Length': '0'}      
         """
@@ -359,9 +357,9 @@ async def SIP_dataProcess(data, responseType):
 
     elif responseType == 'NOTIFY SIP':
         """
-        {'NOTIFY sip': '15001@10.30.44.10;user=phone;transport=UDP;tgrp=1;trunk-context=nec-1.test.com SIP/2.0', 
+        {'NOTIFY sip': '15001@10.30.44.10;user=phone;transport=UDP;tgrp=1;trunk-context=ANY-1.test.com SIP/2.0', 
         'Via': 'SIP/2.0/UDP 10.30.44.71:5060;branch=z9hG4bK-524287-1---7370770d34a87951;rport', 'Max-Forwards': '70', 
-        'Contact': '<sip:13400@10.30.44.71:5060>', 'To': '<sip:15001@10.30.44.10>;user=phone;tgrp=1;trunk-context=nec-1.test.com>;tag=9cc594ra48', 
+        'Contact': '<sip:13400@10.30.44.71:5060>', 'To': '<sip:15001@10.30.44.10>;user=phone;tgrp=1;trunk-context=ANY-1.test.com>;tag=9cc594ra48', 
         'From': '<sip:13400@10.30.44.71;user=phone;transport=UDP;tgrp=1;trunk-context=mitel.test.com>;tag=40814c42', 'Call-ID': 'f0ee99859c11', 
         'CSeq': '3 NOTIFY', 'Content-Type': 'application/call-completion', 'User-Agent': 'Aastra MX-ONE SN/17.3.1.1.14',
          'Subscription-State': 'active;expires=3600', 
@@ -403,20 +401,20 @@ async def SIP_dataProcess(data, responseType):
         debugInfo(
             f"RCV different data from SIP_RCV_CONVERT function: {responseType}------CODE-LINE:{sys._getframe().f_lineno}")
 
-async def ACK_LITE(connection, msg):
+async def ACK_LITE(conANYtion, msg):
 
     msg = msg.encode()
-    connection.sendall(msg)
+    conANYtion.sendall(msg)
     sys.stdout.flush()
     debugInfo(f"SEND ACK LITE - BYTES:->{len(msg)} Bytes -: CODE-LINE:{sys._getframe().f_lineno}")
 
 
 #SOCKET RCV - FUNCTION BLOCK - (1):AFTER RCV
-async def SIP_RCV_CONVERT(data,connection):
+async def SIP_RCV_CONVERT(data,conANYtion):
     """[SIP_RCV_FUNCTION(DATA)]
 
     Args:
-        data ([Bytes]): [Directly receive data from socket connection]
+        data ([Bytes]): [Directly receive data from socket conANYtion]
 
     Then all the data will be transfered to data process function : SIP_dataProcess(data, responseType)
     """
@@ -459,10 +457,10 @@ async def SIP_RCV_CONVERT(data,connection):
                         ack += f"To:{temDict['To'].rsplit(';',1)[0]}\r\n"
                         ack += f"Call-ID:{temDict['Call-ID']}\r\n"
                         ack += f"CSeq:{random.randint(1, 100)} ACK\r\n"
-                        ack += f"User-Agent:SN9600 NEC SN/17.3.1.1.14\r\n"
+                        ack += f"User-Agent:ANYModel ANY SN/17.3.1.1.14\r\n"
                         ack += f"Content-Length: 0\r\n"
                         ack += f"\r\n"
-                        await asyncio.create_task(ACK_LITE(connection=connection, msg=ack))
+                        await asyncio.create_task(ACK_LITE(conANYtion=conANYtion, msg=ack))
 
                         temLine =' '
 
@@ -478,11 +476,11 @@ async def SIP_RCV_CONVERT(data,connection):
                         ack_notify  +=  f"Call-ID:{temDict['Call-ID']}\r\n"
                         ack_notify  +=  f"CSeq:{temDict['CSeq']}\r\n"
                         ack_notify  +=  f"Subscription-State: active;expires=3600\r\n"
-                        ack_notify  +=  f"User-Agent:SN9600 NEC SN/17.3.1.1.14\r\n"
+                        ack_notify  +=  f"User-Agent:ANYModel ANY SN/17.3.1.1.14\r\n"
                         ack_notify  +=  f"Content-Length: 0\r\n"
                         ack_notify  +=  f"\r\n"
                         debugInfo(f"GETTING NOTIFICATION MESSAGE WITH[{temDict['CSeq']}] AND RETUNNG TO REMOTE SEVER 200 OK: {line}--<{ack_notify}>----CODE-LINE:{sys._getframe().f_lineno}")
-                        worker = asyncio.create_task(ACK_LITE(connection=connection, msg=ack_notify))#temDict and ResponseType parsing to the SIP_dataProcess Function
+                        worker = asyncio.create_task(ACK_LITE(conANYtion=conANYtion, msg=ack_notify))#temDict and ResponseType parsing to the SIP_dataProcess Function
                         await asyncio.wait_for(worker, timeout=None)
 
                     elif 'SIP/2.0 100 Trying' in temDict:
@@ -511,13 +509,13 @@ async def SIP_RCV_CONVERT(data,connection):
                         ack_notify  +=  f"Call-ID:{temDict['Call-ID']}\r\n"
                         ack_notify  +=  f"CSeq:{temDict['CSeq']}\r\n"
                         ack_notify  +=  f"Subscription-State: active;expires=3600\r\n"
-                        ack_notify  +=  f"User-Agent:SN9600 NEC SN/17.3.1.1.14\r\n"
+                        ack_notify  +=  f"User-Agent:ANYModel ANY SN/17.3.1.1.14\r\n"
                         ack_notify  +=  f"Content-Length: 0\r\n"
                         ack_notify  +=  f"\r\n"
                         debugInfo(f"GETTING NOTIFICATION MESSAGE AND RETUNNG TO REMOTE SEVER 200 OK: {line}--<{ack_notify}>----CODE-LINE:{sys._getframe().f_lineno}")
                 
                         
-                        worker = asyncio.create_task(ACK_LITE(connection=connection, msg=ack_notify))#temDict and ResponseType parsing to the SIP_dataProcess Function
+                        worker = asyncio.create_task(ACK_LITE(conANYtion=conANYtion, msg=ack_notify))#temDict and ResponseType parsing to the SIP_dataProcess Function
                         await asyncio.wait_for(worker, timeout=None)
                         
                         
@@ -550,7 +548,7 @@ async def CONFIRM_STATUS_HANDLER(call_id, next_status):
 
     # #####print(f"CONFIRM HANDLER INPUT DATA : {call_id}->{cnf}")
     try:
-        conn = sqlite3.connect('callbackMitel.db')
+        conn = sqlite3.conANYt('callbackMitel.db')
         cur = conn.cursor()
     except Exception as e:
         debugInfo(f"CONFIRM HANDLER STATUS CODE-LINE:{sys._getframe().f_lineno}->{e}")
@@ -573,7 +571,7 @@ async def CONFIRM_STATUS_HANDLER(call_id, next_status):
 async def GETTING_NOTIFY_CSEQNO(callID):
 
     try:
-        conn = sqlite3.connect('callbackMitel.db')
+        conn = sqlite3.conANYt('callbackMitel.db')
         cur = conn.cursor()
     except Exception as e:
         debugInfo(f"CODE LINE:{sys._getframe().f_lineno}->{e}")
@@ -601,7 +599,7 @@ async def GETTING_NOTIFY_CSEQNO(callID):
 async def UPDATE_NOTIFY_CSEQNO(call_id, NEXTCOMMAND):
      # #####print(f"CONFIRM HANDLER INPUT DATA : {call_id}->{cnf}")
     try:
-        conn = sqlite3.connect('callbackMitel.db')
+        conn = sqlite3.conANYt('callbackMitel.db')
         cur = conn.cursor()
     except Exception as e:
         debugInfo(f"UPDATE HANDLING NOTIFICATION STATUS CODE-LINE:{sys._getframe().f_lineno}->{e}")
@@ -633,7 +631,7 @@ async def SEND_200(response):
         Via: SIP/2.0/UDP 10.30.44.10:55964;branch=z9hG4bK-f0ec-9ccuuuuuuuuuu5-4a49-8ad3-00876866755b561;rport=55964
         Contact: <sip:10.30.44.71:5060;transport=tcp>
         To: <sip:16000@10.30.44.71;user=phone;transport=UDP;tgrp=3;trunk-context=mxone-1.test.com>;tag=672dec08
-        From: <sip:15000@10.30.44.10;user=phone;tgrp=3;trunk-context=nec.test.com>;tag=9cc594ra48
+        From: <sip:15000@10.30.44.10;user=phone;tgrp=3;trunk-context=ANY.test.com>;tag=9cc594ra48
         Call-ID: 59511
         CSeq: 5 OPTIONS
         Accept: application/sdp, multipart/mixed
@@ -645,43 +643,43 @@ async def SEND_200(response):
         Content-Length: 0
 
     """
-    #response [BRANCH,CALLID,CSEQOPTIONS,NECTAG,MITELEXT,STATUS,MITELSTATUS,CSEQACK,CSEQNOTIFY,CSEQSUB,MITELTAG,EESTAT,M,NEXTCOMMAND]
+    #response [BRANCH,CALLID,CSEQOPTIONS,ANYTAG,MITELEXT,STATUS,MITELSTATUS,CSEQACK,CSEQNOTIFY,CSEQSUB,MITELTAG,EESTAT,M,NEXTCOMMAND]
             
             
     if len(response) > 4:              
         B_ID = response[0]
-        NEC_CALL_ID = response[1]
+        ANY_CALL_ID = response[1]
         CSEQ_NO_SUBSCRIBE = response[9]
-        NEC_TAG = response[3]
+        ANY_TAG = response[3]
         R_EXT = response[4] 
         MITEL_TAG  = response[10]
         METHOD = response[5]  
         CSEQNOTIFY = response[8]
         SUB_M   = response[12]   
-        NEC_EXT = response[15]
+        ANY_EXT = response[15]
 
 
     SIPCHANNEL_METHOD = f"SIP/2.0 200 OK\r\n"
 
-    # SIPCHANNEL_METHODv = f"Via: SIP/2.0/UDP {SIP['REMOTE_IP_MITEL']}:5060;branch=z9hG4bK-c{SIP['NEC_BRANCH']};rport\r\n"
+    # SIPCHANNEL_METHODv = f"Via: SIP/2.0/UDP {SIP['REMOTE_IP_MITEL']}:5060;branch=z9hG4bK-c{SIP['ANY_BRANCH']};rport\r\n"
 
-    SIPCHANNEL_VIA = f"Via: SIP/2.0/UDP {SIP['REMOTE_IP_MITEL']}:5060;branch=z9hG4bK-{B_ID};rport\r\n"#;={CONNECTED_PORT}
+    SIPCHANNEL_VIA = f"Via: SIP/2.0/UDP {SIP['REMOTE_IP_MITEL']}:5060;branch=z9hG4bK-{B_ID};rport\r\n"#;={CONANYTED_PORT}
 
     SIPCHANNEL_MF = f"Max-Forwards: 70\r\n"
 
-    SIPCHANNEL_CONTACT = f"Contact: <sip:{R_EXT}@{SIP['REMOTE_IP_MITEL']}:5060>\r\n" #;transport={SIP['TRANSPORT']};user={SIP['USER']};transport={SIP['TRANSPORT']};tgrp={SIP['NEC_TGROUP']};trunk-context={SIP['NEC_CONTEXT']}>\r\n"
+    SIPCHANNEL_CONTACT = f"Contact: <sip:{R_EXT}@{SIP['REMOTE_IP_MITEL']}:5060>\r\n" #;transport={SIP['TRANSPORT']};user={SIP['USER']};transport={SIP['TRANSPORT']};tgrp={SIP['ANY_TGROUP']};trunk-context={SIP['ANY_CONTEXT']}>\r\n"
 
-    # SIPCHANNEL_CONTACT  =   f"Contact: <sip:{NEC_EXT}@{SIP['NEC_PILOT_IP']};rinstance={SIP['RINSTANCE']};user={SIP['USER']};transport={SIP['TRANSPORT']};tgrp={SIP['NEC_TGROUP']};trunk-context={SIP['NEC_CONTEXT']}>\r\n"
+    # SIPCHANNEL_CONTACT  =   f"Contact: <sip:{ANY_EXT}@{SIP['ANY_PILOT_IP']};rinstance={SIP['RINSTANCE']};user={SIP['USER']};transport={SIP['TRANSPORT']};tgrp={SIP['ANY_TGROUP']};trunk-context={SIP['ANY_CONTEXT']}>\r\n"
 
     # SIPCHANNEL_TO_WITHOUT_TAG       =   f"To: <sip:{SIP['REMOTE_EXT']}@{SIP['REMOTE_IP_MITEL']}>\r\n"
     # SIPCHANNEL_TO_WITHOUT_TAG = f"To: <sip:{R_EXT}@{SIP['REMOTE_IP_MITEL']};user={SIP['USER']};transport={SIP['TRANSPORT']};tgrp={SIP['MITEL_TGROUP']};trunk-context={SIP['MITEL_CONTEXT']}>\r\n"
 
-    SIPCHANNEL_TO_WITH_TAG = f"To: <{NEC_EXT}@{SIP['NEC_PILOT_IP']}>;user={SIP['USER']};transport={SIP['TRANSPORT']};tgrp={SIP['MITEL_TGROUP']};trunk-context={SIP['NEC_CONTEXT']};tag={NEC_TAG}\r\n" #;tag={MITEL_TAG}
+    SIPCHANNEL_TO_WITH_TAG = f"To: <{ANY_EXT}@{SIP['ANY_PILOT_IP']}>;user={SIP['USER']};transport={SIP['TRANSPORT']};tgrp={SIP['MITEL_TGROUP']};trunk-context={SIP['ANY_CONTEXT']};tag={ANY_TAG}\r\n" #;tag={MITEL_TAG}
 
     SIPCHANNEL_FROM = f"From: <sip:{R_EXT}@{SIP['REMOTE_IP_MITEL']};user={SIP['USER']};tgrp={SIP['MITEL_TGROUP']};trunk-context={SIP['MITEL_CONTEXT']};m={SUB_M}>;tag={MITEL_TAG}\r\n"
-    # SIPCHANNEL_FROM     =   f"From: <sip:{NEC_EXT}@{SIP['NEC_PILOT_IP']};user={SIP['USER']};tgrp={SIP['NEC_TGROUP']};trunk-context={SIP['NEC_CONTEXT']}>;tag={SIP['NEC_TAG']}\r\n"
+    # SIPCHANNEL_FROM     =   f"From: <sip:{ANY_EXT}@{SIP['ANY_PILOT_IP']};user={SIP['USER']};tgrp={SIP['ANY_TGROUP']};trunk-context={SIP['ANY_CONTEXT']}>;tag={SIP['ANY_TAG']}\r\n"
 
-    SIPCHANNEL_CALLID = f"Call-ID: {NEC_CALL_ID}\r\n"
+    SIPCHANNEL_CALLID = f"Call-ID: {ANY_CALL_ID}\r\n"
 
     SIPCHANNEL_CSEQ = f"CSeq: {CSEQNOTIFY} {METHOD}\r\n"
 
@@ -734,17 +732,17 @@ async def SEND_200(response):
 #SOCKET SEND SIP SUBSCRIBE FUNCTION BLOCK - (5):DATA SND
 async def SIP_SUBSCRIBE(response):
 
-    #response [BRANCH,CALLID,CSEQOPTIONS,NECTAG,MITELEXT,STATUS,MITELSTATUS,CSEQACK,CSEQNOTIFY,CSEQSUB,MITELTAG,EESTAT,M]
+    #response [BRANCH,CALLID,CSEQOPTIONS,ANYTAG,MITELEXT,STATUS,MITELSTATUS,CSEQACK,CSEQNOTIFY,CSEQSUB,MITELTAG,EESTAT,M]
     if len(response) > 4:              
         B_ID = response[0]
-        NEC_CALL_ID = response[1]
+        ANY_CALL_ID = response[1]
         CSEQ_NO_SUBSCRIBE = response[9]
-        NEC_TAG = response[3]
+        ANY_TAG = response[3]
         R_EXT = response[4] 
         MITEL_TAG  = response[10]
         METHOD = response[6]  
         SUB_M   = response[12]  
-        NEC_EXT = response[15]      
+        ANY_EXT = response[15]      
 
         #removed from all : ;user={SIP['USER']}
 
@@ -752,25 +750,25 @@ async def SIP_SUBSCRIBE(response):
 
     SIPCHANNEL_METHOD = f"{SIP['METHOD'][3]} sip:{R_EXT}@{SIP['REMOTE_IP_MITEL']};user={SIP['USER']};transport={SIP['TRANSPORT']};tgrp={SIP['MITEL_TGROUP']};trunk-context={SIP['MITEL_CONTEXT']};m={SUB_M} SIP/2.0\r\n"
 
-    # SIPCHANNEL_METHODv = f"Via: SIP/2.0/UDP {SIP['REMOTE_IP_MITEL']}:5060;branch=z9hG4bK-c{SIP['NEC_BRANCH']};rport\r\n"
+    # SIPCHANNEL_METHODv = f"Via: SIP/2.0/UDP {SIP['REMOTE_IP_MITEL']}:5060;branch=z9hG4bK-c{SIP['ANY_BRANCH']};rport\r\n"
 
-    SIPCHANNEL_VIA = f"Via: SIP/2.0/UDP {SIP['NEC_PILOT_IP']}:{CONNECTED_PORT};branch=z9hG4bK-{B_ID};rport\r\n"
+    SIPCHANNEL_VIA = f"Via: SIP/2.0/UDP {SIP['ANY_PILOT_IP']}:{CONANYTED_PORT};branch=z9hG4bK-{B_ID};rport\r\n"
 
     SIPCHANNEL_MF = f"Max-Forwards: 70\r\n"
 
-    SIPCHANNEL_CONTACT = f"Contact: <sip:{NEC_EXT}@{SIP['NEC_PILOT_IP']};user={SIP['USER']};transport={SIP['TRANSPORT']};tgrp={SIP['NEC_TGROUP']};trunk-context={SIP['NEC_CONTEXT']}>\r\n"
+    SIPCHANNEL_CONTACT = f"Contact: <sip:{ANY_EXT}@{SIP['ANY_PILOT_IP']};user={SIP['USER']};transport={SIP['TRANSPORT']};tgrp={SIP['ANY_TGROUP']};trunk-context={SIP['ANY_CONTEXT']}>\r\n"
 
-    # SIPCHANNEL_CONTACT  =   f"Contact: <sip:{NEC_EXT}@{SIP['NEC_PILOT_IP']};rinstance={SIP['RINSTANCE']};user={SIP['USER']};transport={SIP['TRANSPORT']};tgrp={SIP['NEC_TGROUP']};trunk-context={SIP['NEC_CONTEXT']}>\r\n"
+    # SIPCHANNEL_CONTACT  =   f"Contact: <sip:{ANY_EXT}@{SIP['ANY_PILOT_IP']};rinstance={SIP['RINSTANCE']};user={SIP['USER']};transport={SIP['TRANSPORT']};tgrp={SIP['ANY_TGROUP']};trunk-context={SIP['ANY_CONTEXT']}>\r\n"
 
     # SIPCHANNEL_TO_WITHOUT_TAG       =   f"To: <sip:{SIP['REMOTE_EXT']}@{SIP['REMOTE_IP_MITEL']}>\r\n"
     SIPCHANNEL_TO_WITHOUT_TAG = f"To: <sip:{R_EXT}@{SIP['REMOTE_IP_MITEL']};user={SIP['USER']};transport={SIP['TRANSPORT']};tgrp={SIP['MITEL_TGROUP']};trunk-context={SIP['MITEL_CONTEXT']}>\r\n"
 
     SIPCHANNEL_TO_WITH_TAG = f"To: <sip:{R_EXT}@{SIP['REMOTE_IP_MITEL']};user={SIP['USER']};transport={SIP['TRANSPORT']};tgrp={SIP['MITEL_TGROUP']};trunk-context={SIP['MITEL_CONTEXT']};m={SUB_M}>\r\n" #;tag={MITEL_TAG}
 
-    SIPCHANNEL_FROM = f"From: <sip:{NEC_EXT}@{SIP['NEC_PILOT_IP']}>;user={SIP['USER']};tgrp={SIP['NEC_TGROUP']};trunk-context={SIP['NEC_CONTEXT']};tag={NEC_TAG}\r\n"
-    # SIPCHANNEL_FROM     =   f"From: <sip:{NEC_EXT}@{SIP['NEC_PILOT_IP']};user={SIP['USER']};tgrp={SIP['NEC_TGROUP']};trunk-context={SIP['NEC_CONTEXT']}>;tag={SIP['NEC_TAG']}\r\n"
+    SIPCHANNEL_FROM = f"From: <sip:{ANY_EXT}@{SIP['ANY_PILOT_IP']}>;user={SIP['USER']};tgrp={SIP['ANY_TGROUP']};trunk-context={SIP['ANY_CONTEXT']};tag={ANY_TAG}\r\n"
+    # SIPCHANNEL_FROM     =   f"From: <sip:{ANY_EXT}@{SIP['ANY_PILOT_IP']};user={SIP['USER']};tgrp={SIP['ANY_TGROUP']};trunk-context={SIP['ANY_CONTEXT']}>;tag={SIP['ANY_TAG']}\r\n"
 
-    SIPCHANNEL_CALLID = f"Call-ID: {NEC_CALL_ID}\r\n"
+    SIPCHANNEL_CALLID = f"Call-ID: {ANY_CALL_ID}\r\n"
 
     SIPCHANNEL_CSEQ = f"CSeq: {CSEQ_NO_SUBSCRIBE} {SIP['CSEQ_METHOD'][3]}\r\n"
 
@@ -820,24 +818,24 @@ async def SIP_SUBSCRIBE(response):
 
 #NEED UPDATE FOR THIS 
 async def SEND_SUBSCRIBE(response_sub):
-    #response [BRANCH,CALLID,CSEQOPTIONS,NECTAG,MITELEXT,STATUS,MITELSTATUS,CSEQACK,CSEQNOTIFY,CSEQSUB,MITELTAG,EESTAT,M]
+    #response [BRANCH,CALLID,CSEQOPTIONS,ANYTAG,MITELEXT,STATUS,MITELSTATUS,CSEQACK,CSEQNOTIFY,CSEQSUB,MITELTAG,EESTAT,M]
     pass
 
 #SOCKET SEND SIP ACK FUNCTION BLOCK - (4):DATA SND
 async def SIP_ACK(response_db):
 
-    #response [BRANCH,CALLID,CSEQOPTIONS,NECTAG,MITELEXT,STATUS,MITELSTATUS,CSEQACK,CSEQNOTIFY,CSEQSUB,MITELTAG,EESTAT,M]
+    #response [BRANCH,CALLID,CSEQOPTIONS,ANYTAG,MITELEXT,STATUS,MITELSTATUS,CSEQACK,CSEQNOTIFY,CSEQSUB,MITELTAG,EESTAT,M]
 
     if len(response_db) > 4:      
         
         B_ID = response_db[0]
-        NEC_CALL_ID = response_db[1]
+        ANY_CALL_ID = response_db[1]
         # CSEQ_NO_OPTIONS = response_db[2]
-        NEC_TAG = response_db[3]
+        ANY_TAG = response_db[3]
         R_EXT = response_db[4] 
         MITEL_TAG  = response_db[10]
         METHOD = response_db[6]   
-        NEC_EXT = response_db[15]
+        ANY_EXT = response_db[15]
         
 
         # if METHOD == 'OPTIONS':
@@ -855,7 +853,7 @@ async def SIP_ACK(response_db):
             # taskACK = asyncio.create_task(db_ACK_HANDLER(CALLER_ID,CSEQ_NO_METHOD))
             # await asyncio.wait_for(taskACK,timeout=None)
 
-        # NEC_TAG = result[10]
+        # ANY_TAG = result[10]
         # MITEL_TAG = result[11]
         # SUB_M = result[13]  # CALL_BOOKING
         # R_EXT = result[17]  # REMOTE EXTENTION
@@ -866,25 +864,25 @@ async def SIP_ACK(response_db):
 
     SIPCHANNEL_METHOD = f"{SIP['METHOD'][2]} sip:{R_EXT}@{SIP['REMOTE_IP_MITEL']};user={SIP['USER']};transport={SIP['TRANSPORT']};tgrp={SIP['MITEL_TGROUP']};trunk-context={SIP['MITEL_CONTEXT']} SIP/2.0\r\n"
 
-    # SIPCHANNEL_METHODv = f"Via: SIP/2.0/UDP {SIP['REMOTE_IP_MITEL']}:5060;branch=z9hG4bK-c{SIP['NEC_BRANCH']};rport\r\n"
+    # SIPCHANNEL_METHODv = f"Via: SIP/2.0/UDP {SIP['REMOTE_IP_MITEL']}:5060;branch=z9hG4bK-c{SIP['ANY_BRANCH']};rport\r\n"
 
-    SIPCHANNEL_VIA = f"Via: SIP/2.0/UDP {SIP['NEC_PILOT_IP']}:{CONNECTED_PORT};branch=z9hG4bK-{B_ID};rport\r\n"
+    SIPCHANNEL_VIA = f"Via: SIP/2.0/UDP {SIP['ANY_PILOT_IP']}:{CONANYTED_PORT};branch=z9hG4bK-{B_ID};rport\r\n"
 
     SIPCHANNEL_MF = f"Max-Forwards: 70\r\n"
 
-    SIPCHANNEL_CONTACT = f"Contact: <sip:{NEC_EXT}@{SIP['NEC_PILOT_IP']};user={SIP['USER']};transport={SIP['TRANSPORT']};tgrp={SIP['NEC_TGROUP']};trunk-context={SIP['NEC_CONTEXT']}>\r\n"
+    SIPCHANNEL_CONTACT = f"Contact: <sip:{ANY_EXT}@{SIP['ANY_PILOT_IP']};user={SIP['USER']};transport={SIP['TRANSPORT']};tgrp={SIP['ANY_TGROUP']};trunk-context={SIP['ANY_CONTEXT']}>\r\n"
 
-    # SIPCHANNEL_CONTACT  =   f"Contact: <sip:{NEC_EXT}@{SIP['NEC_PILOT_IP']};rinstance={SIP['RINSTANCE']};user={SIP['USER']};transport={SIP['TRANSPORT']};tgrp={SIP['NEC_TGROUP']};trunk-context={SIP['NEC_CONTEXT']}>\r\n"
+    # SIPCHANNEL_CONTACT  =   f"Contact: <sip:{ANY_EXT}@{SIP['ANY_PILOT_IP']};rinstance={SIP['RINSTANCE']};user={SIP['USER']};transport={SIP['TRANSPORT']};tgrp={SIP['ANY_TGROUP']};trunk-context={SIP['ANY_CONTEXT']}>\r\n"
 
     # SIPCHANNEL_TO_WITHOUT_TAG       =   f"To: <sip:{SIP['REMOTE_EXT']}@{SIP['REMOTE_IP_MITEL']}>\r\n"
     SIPCHANNEL_TO_WITHOUT_TAG = f"To: <sip:{R_EXT}@{SIP['REMOTE_IP_MITEL']};user={SIP['USER']};transport={SIP['TRANSPORT']};tgrp={SIP['MITEL_TGROUP']};trunk-context={SIP['MITEL_CONTEXT']}>\r\n"
 
     SIPCHANNEL_TO_WITH_TAG = f"To: <sip:{R_EXT}@{SIP['REMOTE_IP_MITEL']};user={SIP['USER']};transport={SIP['TRANSPORT']};tgrp={SIP['MITEL_TGROUP']};trunk-context={SIP['MITEL_CONTEXT']}>\r\n" #;tag={MITEL_TAG}
 
-    SIPCHANNEL_FROM = f"From: <sip:{NEC_EXT}@{SIP['NEC_PILOT_IP']};user={SIP['USER']};tgrp={SIP['NEC_TGROUP']};trunk-context={SIP['NEC_CONTEXT']}>;tag={NEC_TAG}\r\n"
-    # SIPCHANNEL_FROM     =   f"From: <sip:{NEC_EXT}@{SIP['NEC_PILOT_IP']};user={SIP['USER']};tgrp={SIP['NEC_TGROUP']};trunk-context={SIP['NEC_CONTEXT']}>;tag={SIP['NEC_TAG']}\r\n"
+    SIPCHANNEL_FROM = f"From: <sip:{ANY_EXT}@{SIP['ANY_PILOT_IP']};user={SIP['USER']};tgrp={SIP['ANY_TGROUP']};trunk-context={SIP['ANY_CONTEXT']}>;tag={ANY_TAG}\r\n"
+    # SIPCHANNEL_FROM     =   f"From: <sip:{ANY_EXT}@{SIP['ANY_PILOT_IP']};user={SIP['USER']};tgrp={SIP['ANY_TGROUP']};trunk-context={SIP['ANY_CONTEXT']}>;tag={SIP['ANY_TAG']}\r\n"
 
-    SIPCHANNEL_CALLID = f"Call-ID: {NEC_CALL_ID}\r\n"
+    SIPCHANNEL_CALLID = f"Call-ID: {ANY_CALL_ID}\r\n"
 
     SIPCHANNEL_CSEQ =f"CSeq: {CSEQ_NO_METHOD} {METHOD}\r\n"
 
@@ -929,40 +927,40 @@ async def SIP_ACK(response_db):
 
 #SOCKET SEND SIP OPTIONS FUNCTION BLOCK - (3):DATA SND
 async def SIP_OPTION(response_db):
-    #[BRANCHID,CALLID,CSEQNO_OPTION,NECTAG,REMOTE_EXTENSION]
+    #[BRANCHID,CALLID,CSEQNO_OPTION,ANYTAG,REMOTE_EXTENSION]
     if len(response_db) > 4:
 
         B_ID = response_db[0]
-        NEC_CALL_ID = response_db[1]
+        ANY_CALL_ID = response_db[1]
         CSEQ_NO_OPTIONS = response_db[2]
-        NEC_TAG = response_db[3]
+        ANY_TAG = response_db[3]
         R_EXT = response_db[4]       
-        NEC_EXT = response_db[15]
+        ANY_EXT = response_db[15]
         
         
     # ######print(result)
 
     SIPCHANNEL_METHOD = f"{SIP['METHOD'][7]} sip:{R_EXT}@{SIP['REMOTE_IP_MITEL']};user={SIP['USER']};transport={SIP['TRANSPORT']};tgrp={SIP['MITEL_TGROUP']};trunk-context={SIP['MITEL_CONTEXT']} SIP/2.0\r\n"
 
-    # SIPCHANNEL_METHODv = f"Via: SIP/2.0/UDP {SIP['REMOTE_IP_MITEL']}:5060;branch=z9hG4bK-c{SIP['NEC_BRANCH']};rport\r\n"
+    # SIPCHANNEL_METHODv = f"Via: SIP/2.0/UDP {SIP['REMOTE_IP_MITEL']}:5060;branch=z9hG4bK-c{SIP['ANY_BRANCH']};rport\r\n"
 
-    SIPCHANNEL_VIA = f"Via: SIP/2.0/UDP {SIP['NEC_PILOT_IP']}:{CONNECTED_PORT};branch=z9hG4bK-{B_ID};rport\r\n"
+    SIPCHANNEL_VIA = f"Via: SIP/2.0/UDP {SIP['ANY_PILOT_IP']}:{CONANYTED_PORT};branch=z9hG4bK-{B_ID};rport\r\n"
 
     SIPCHANNEL_MF = f"Max-Forwards: 70\r\n"
 
-    SIPCHANNEL_CONTACT = f"Contact: <sip:{NEC_EXT}@{SIP['NEC_PILOT_IP']};user={SIP['USER']};transport={SIP['TRANSPORT']};tgrp={SIP['NEC_TGROUP']};trunk-context={SIP['NEC_CONTEXT']}>\r\n"
+    SIPCHANNEL_CONTACT = f"Contact: <sip:{ANY_EXT}@{SIP['ANY_PILOT_IP']};user={SIP['USER']};transport={SIP['TRANSPORT']};tgrp={SIP['ANY_TGROUP']};trunk-context={SIP['ANY_CONTEXT']}>\r\n"
 
-    # SIPCHANNEL_CONTACT  =   f"Contact: <sip:{NEC_EXT}@{SIP['NEC_PILOT_IP']};rinstance={SIP['RINSTANCE']};user={SIP['USER']};transport={SIP['TRANSPORT']};tgrp={SIP['NEC_TGROUP']};trunk-context={SIP['NEC_CONTEXT']}>\r\n"
+    # SIPCHANNEL_CONTACT  =   f"Contact: <sip:{ANY_EXT}@{SIP['ANY_PILOT_IP']};rinstance={SIP['RINSTANCE']};user={SIP['USER']};transport={SIP['TRANSPORT']};tgrp={SIP['ANY_TGROUP']};trunk-context={SIP['ANY_CONTEXT']}>\r\n"
 
     # SIPCHANNEL_TO_WITHOUT_TAG       =   f"To: <sip:{SIP['REMOTE_EXT']}@{SIP['REMOTE_IP_MITEL']}>\r\n"
     SIPCHANNEL_TO_WITHOUT_TAG = f"To: <sip:{R_EXT}@{SIP['REMOTE_IP_MITEL']};user={SIP['USER']};transport={SIP['TRANSPORT']};tgrp={SIP['MITEL_TGROUP']};trunk-context={SIP['MITEL_CONTEXT']}>\r\n"
 
     SIPCHANNEL_TO_WITH_TAG = f"To: <sip:{R_EXT}@{SIP['REMOTE_IP_MITEL']};user={SIP['USER']};transport={SIP['TRANSPORT']};tgrp={SIP['MITEL_TGROUP']};trunk-context={SIP['MITEL_CONTEXT']}>;tag={SIP['MITEL_TAG']}\r\n"
 
-    SIPCHANNEL_FROM = f"From: <sip:{NEC_EXT}@{SIP['NEC_PILOT_IP']};user={SIP['USER']};tgrp={SIP['NEC_TGROUP']};trunk-context={SIP['NEC_CONTEXT']}>;tag={NEC_TAG}\r\n"
-    # SIPCHANNEL_FROM     =   f"From: <sip:{NEC_EXT}@{SIP['NEC_PILOT_IP']};user={SIP['USER']};tgrp={SIP['NEC_TGROUP']};trunk-context={SIP['NEC_CONTEXT']}>;tag={SIP['NEC_TAG']}\r\n"
+    SIPCHANNEL_FROM = f"From: <sip:{ANY_EXT}@{SIP['ANY_PILOT_IP']};user={SIP['USER']};tgrp={SIP['ANY_TGROUP']};trunk-context={SIP['ANY_CONTEXT']}>;tag={ANY_TAG}\r\n"
+    # SIPCHANNEL_FROM     =   f"From: <sip:{ANY_EXT}@{SIP['ANY_PILOT_IP']};user={SIP['USER']};tgrp={SIP['ANY_TGROUP']};trunk-context={SIP['ANY_CONTEXT']}>;tag={SIP['ANY_TAG']}\r\n"
 
-    SIPCHANNEL_CALLID = f"Call-ID: {NEC_CALL_ID}\r\n"
+    SIPCHANNEL_CALLID = f"Call-ID: {ANY_CALL_ID}\r\n"
 
     SIPCHANNEL_CSEQ = f"CSeq: {CSEQ_NO_OPTIONS} {SIP['CSEQ_METHOD'][7]}\r\n"
 
@@ -1011,10 +1009,10 @@ async def SIP_OPTION(response_db):
     return OPTION_MSG
 
 #SOCKET SEND FUNCTION BLOCK - (2):DATA SND (ALL LOGICS - FOR SELECTING SIP-HEADERS)-ALL LOGIC DECISIONS 
-async def SIP_SIGNAL_SENDING(connection,response):
+async def SIP_SIGNAL_SENDING(conANYtion,response):
     global FLAP , FLAP_M
 
-    #[BRANCHID,CALLID,CSEQNO_OPTION,NECTAG,REMOTE_EXTENSION]
+    #[BRANCHID,CALLID,CSEQNO_OPTION,ANYTAG,REMOTE_EXTENSION]
 
     CALLER_ID   =    response[1]
     # #print(response)
@@ -1035,7 +1033,7 @@ async def SIP_SIGNAL_SENDING(connection,response):
         result = await asyncio.wait_for(worker, timeout=None)
         try:
             msg = result.encode()
-            connection.sendall(msg)
+            conANYtion.sendall(msg)
             sys.stdout.flush()
             debugInfo(f"SEND SIP OPTIONS MSG BYTES:  ->{len(msg)} -: CODE-LINE:{sys._getframe().f_lineno}")
             # #print(msg)
@@ -1058,8 +1056,8 @@ async def SIP_SIGNAL_SENDING(connection,response):
             
         # # try:
         #     msg = result.encode()
-        #     connection.sendall(msg)
-        #     # connection.sendall(msg)
+        #     conANYtion.sendall(msg)
+        #     # conANYtion.sendall(msg)
         #     sys.stdout.flush()
         #     debugInfo(f"SEND SIP ACK AFTER THE 200 RESPONSE AND SENT BYTES:  ->{len(msg)} -: CODE-LINE:{sys._getframe().f_lineno}")
             # sys.exit(0)
@@ -1084,7 +1082,7 @@ async def SIP_SIGNAL_SENDING(connection,response):
             # #print(result)
         # try:
             msg = result.encode()
-            connection.sendall(msg)
+            conANYtion.sendall(msg)
             sys.stdout.flush()
             debugInfo(f"SEND SIP SUBSCRIBE AFTER THE *ACK* AND SENT BYTES:  ->{len(msg)} -: CODE-LINE:{sys._getframe().f_lineno}")
             # #print(msg)
@@ -1114,8 +1112,8 @@ async def SIP_SIGNAL_SENDING(connection,response):
             #     # #print(result)
             # # try:
             # msg = result.encode()
-            # connection.sendall(msg)
-            #     # connection.sendall(msg)
+            # conANYtion.sendall(msg)
+            #     # conANYtion.sendall(msg)
             # sys.stdout.flush()
             # #print(msg)
             # #     # sys.exit(0)
@@ -1136,8 +1134,8 @@ async def SIP_SIGNAL_SENDING(connection,response):
             #     # #print(result)
             # # try:
             # msg = result.encode()
-            # connection.sendall(msg)
-            #     # connection.sendall(msg)
+            # conANYtion.sendall(msg)
+            #     # conANYtion.sendall(msg)
             # sys.stdout.flush()
             # #print(msg)
             # #     # sys.exit(0)
@@ -1150,12 +1148,12 @@ async def SIP_SIGNAL_SENDING(connection,response):
             # sys.exit(0)
 
 #SOCKET SEND FUNCTION BLOCK - (1):DATA SND
-async def SOCKET_SEND(connection):
+async def SOCKET_SEND(conANYtion):
     """[SOCKET_SEND]
 
     
     Args:
-        connection ([socket]): [socket instance for sending data to mitel Intier server]
+        conANYtion ([socket]): [socket instance for sending data to mitel Intier server]
         respose ([sqlite3]): [this will return the list of data [call-id,status,prime-id]]
 
         * Depend on the response - status following switching function 
@@ -1164,7 +1162,7 @@ async def SOCKET_SEND(connection):
 
         response[1] == 'RQ'
             * This status where initial request send by the caller where sending requesting callee by DTMF  pressing 6
-                Then Server will send OPTIONS SIP command to connection socket to send data to Mitel Server  
+                Then Server will send OPTIONS SIP command to conANYtion socket to send data to Mitel Server  
             
                     Function:   SEND_OPTIONS_HANDLER(respose[0])) 
                     Arg     :   response[0] -> call-Id from database 
@@ -1175,14 +1173,14 @@ async def SOCKET_SEND(connection):
                 Then 200 status updated by the RCV_HANDLER() function 
                 Functions   :   SEND_ACK_HANDLER(CSLL-ID, ACK_METHOD)
                 args        :   CALL-ID and ACK_METHOD 
-                return      :   ACK message will return from this function and it will send through instance connection socket to the Mitel Server
+                return      :   ACK message will return from this function and it will send through instance conANYtion socket to the Mitel Server
 
                     * Then STATUS will be updated as 'SU' , that mean awating to send SUBSCRIBE message to Mitel Sever through the function of  
 
                         Function    :   CONFIRM_HANDLER(respose[0], 'WAIT')
 
                             * Status will be updated as WAIT 
-                                * This means , NEC callback server will stay untill reception of first NOTIFY command 
+                                * This means , ANY callback server will stay untill reception of first NOTIFY command 
         
         * Soon after receving the NOTIFY message status 
             * system will identify the CC_STATUS and it will update the database system 
@@ -1198,7 +1196,7 @@ async def SOCKET_SEND(connection):
     """
 
     try:
-        conn = sqlite3.connect('callbackMitel.db')
+        conn = sqlite3.conANYt('callbackMitel.db')
         cur = conn.cursor()
     except Exception as e:
         debugInfo(
@@ -1219,7 +1217,7 @@ async def SOCKET_SEND(connection):
             # #print(data)
             # sys.exit(0)
             #MAIN FUNCTION TO BE ADDAD 
-            #[BRANCHID,CALLID,CSEQNO_OPTION,NECTAG,REMOTE_EXTENSION]
+            #[BRANCHID,CALLID,CSEQNO_OPTION,ANYTAG,REMOTE_EXTENSION]
             #ID,branch, callid,cseqOption,cseqInvite,
 
             """    
@@ -1237,7 +1235,7 @@ async def SOCKET_SEND(connection):
             7   `CSEQNOTIFY`	TEXT,
             8   `CSEQSUB`	TEXT,
             9  `RINSTANCE`	TEXT,
-            10  `NECTAG`	TEXT,
+            10  `ANYTAG`	TEXT,
             11  `MITELTAG`	TEXT,
             12  `PURPOSE`	TEXT,
             13  `M`	TEXT,
@@ -1245,7 +1243,7 @@ async def SOCKET_SEND(connection):
             15  `TIMESTAMPUPDATE`	TEXT,
             16  `TIMESTAMPEND`	TEXT,
             17  `MITELEXT`	TEXT,
-            18  `NECEXT`	TEXT,
+            18  `ANYEXT`	TEXT,
             19  `EESTAT`	TEXT,
             20  `STATUS`	TEXT,
             21  `MITELSTATUS`	TEXT,
@@ -1253,12 +1251,12 @@ async def SOCKET_SEND(connection):
             23  `NEXT`	TEXT,
             
             """
-            #response [BRANCH,CALLID,CSEQOPTIONS,NECTAG,MITELEXT,STATUS,MITELSTATUS,CSEQACK,CSEQNOTIFY,CSEQSUB,MITELTAG,EESTAT,M,NEXTCOMMAND]
+            #response [BRANCH,CALLID,CSEQOPTIONS,ANYTAG,MITELEXT,STATUS,MITELSTATUS,CSEQACK,CSEQNOTIFY,CSEQSUB,MITELTAG,EESTAT,M,NEXTCOMMAND]
             response = [data[1],data[2],data[3],data[10],data[17],data[20],data[21],data[6],data[7],data[8],data[11],data[19],data[13],data[22],data[23],data[18]]
             # #print(response)
             # sys.exit(0)
             worker = asyncio.create_task(
-            SIP_SIGNAL_SENDING(connection, response))   #   Where data presence system will parss all the data 
+            SIP_SIGNAL_SENDING(conANYtion, response))   #   Where data presence system will parss all the data 
             await asyncio.wait_for(worker, timeout=None)
             await asyncio.sleep(0.1)
             
@@ -1270,63 +1268,63 @@ async def SOCKET_SEND(connection):
         conn.close()
 
 #MAIN SOCKET FUNCTION BLOCK - (0)
-async def SOCKETCONNECTION():
-    global CONNECTED_PORT
+async def SOCKETCONANYTION():
+    global CONANYTED_PORT
 
     pid = os.fork()
 
     debugInfo(
-        f"SOCKET UDP CONNECTION ESTABILISHING ---SOCKET-IPPROTO{SOCKT_TYPE}----CODE LINE:{sys._getframe().f_lineno}->SOCKET CONNECTION STARTED")
+        f"SOCKET UDP CONANYTION ESTABILISHING ---SOCKET-IPPROTO{SOCKT_TYPE}----CODE LINE:{sys._getframe().f_lineno}->SOCKET CONANYTION STARTED")
     # try:
 
-    if SOCKT_TYPE == 'NEC':
+    if SOCKT_TYPE == 'ANY':
 
-        connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM, socket.IPPROTO_TCP)
-        connection.settimeout(180)
-        connection.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        connection.setsockopt(socket.SOL_TCP, socket.TCP_NODELAY, 1) 
-        connection.setsockopt(socket.SOL_SOCKET, socket.SO_SNDBUF, SEND_BUF_SIZE)
-        connection.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, RECV_BUF_SIZE)
+        conANYtion = socket.socket(socket.AF_INET, socket.SOCK_STREAM, socket.IPPROTO_TCP)
+        conANYtion.settimeout(180)
+        conANYtion.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        conANYtion.setsockopt(socket.SOL_TCP, socket.TCP_NODELAY, 1) 
+        conANYtion.setsockopt(socket.SOL_SOCKET, socket.SO_SNDBUF, SEND_BUF_SIZE)
+        conANYtion.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, RECV_BUF_SIZE)
 
 
     elif SOCKT_TYPE == 'MITEL':
         
-        connection = socket.socket(
+        conANYtion = socket.socket(
             socket.AF_INET, socket.SOCK_DGRAM,socket.IPPROTO_UDP)  # Creating Socket        
-        connection.settimeout(180)      #Wait standard ringing time Need to find best values        
-        connection.setblocking(False)
-        connection.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)        
-        connection.setsockopt(socket.SOL_SOCKET, socket.SO_SNDBUF, SEND_BUF_SIZE)
-        connection.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, RECV_BUF_SIZE)       
+        conANYtion.settimeout(180)      #Wait standard ringing time Need to find best values        
+        conANYtion.setblocking(False)
+        conANYtion.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)        
+        conANYtion.setsockopt(socket.SOL_SOCKET, socket.SO_SNDBUF, SEND_BUF_SIZE)
+        conANYtion.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, RECV_BUF_SIZE)       
 
     debugInfo(
-        f"SOCKET-CONNECTION CREATED WITHOUT ERRORS-------CODE-LINE:{sys._getframe().f_lineno}->SOCKET CONNECTION TRYING")
+        f"SOCKET-CONANYTION CREATED WITHOUT ERRORS-------CODE-LINE:{sys._getframe().f_lineno}->SOCKET CONANYTION TRYING")
     try:
         
-        connection.connect((REMOTE_IP_MITEL, REMOTE_PORT_MITEL))# Connecting to the Sever
+        conANYtion.conANYt((REMOTE_IP_MITEL, REMOTE_PORT_MITEL))# ConANYting to the Sever
 
-        CONNECTED_PORT = int(str(connection).split()[6].split(')')[0])
-        #print(f"CONNECTED TO MITEL SERVER THROUGH  ORT NO : {CONNECTED_PORT}")
+        CONANYTED_PORT = int(str(conANYtion).split()[6].split(')')[0])
+        #print(f"CONANYTED TO MITEL SERVER THROUGH  ORT NO : {CONANYTED_PORT}")
 
-        # connection.
+        # conANYtion.
     except Exception as e:
 
         debugInfo(
-            f"This Exception is while estabilishing connection between 'server' [{sys._getframe().f_lineno}]->{e}CHECK THE ROUTER")
+            f"This Exception is while estabilishing conANYtion between 'server' [{sys._getframe().f_lineno}]->{e}CHECK THE ROUTER")
 
-    debugInfo(f"Connection information -:[{sys._getframe().f_lineno}]->{connection}")
+    debugInfo(f"ConANYtion information -:[{sys._getframe().f_lineno}]->{conANYtion}")
 
     # start = timeit.default_timer()
 
 
     while True:
-        readers, xw, xr = select.select([sys.stdin, connection], [], [])    # This selector will manage the readers TX and Rx availability
+        readers, xw, xr = select.select([sys.stdin, conANYtion], [], [])    # This selector will manage the readers TX and Rx availability
         
-        for r in readers:   # While Connection mode -> Selector will allow send data to Server            
+        for r in readers:   # While ConANYtion mode -> Selector will allow send data to Server            
             # if os.fork()> 0:
             if pid > 0:
 
-                if r is connection:
+                if r is conANYtion:
                 
                     """
                     RCV_HANDLER(RECEIVED DATA)
@@ -1337,10 +1335,10 @@ async def SOCKETCONNECTION():
                     return          : NO
                     Parsing function to Asynic mode in order to operate the main function in mode of damean 
                     """
-                    data = connection.recv(SEND_BUF_SIZE)
+                    data = conANYtion.recv(SEND_BUF_SIZE)
                     if len(data)>0:
                         #print(data)
-                        worker = asyncio.create_task(SIP_RCV_CONVERT(data,connection))
+                        worker = asyncio.create_task(SIP_RCV_CONVERT(data,conANYtion))
                         await asyncio.wait_for(worker, timeout=None)
                 else:              
                     
@@ -1358,15 +1356,15 @@ async def SOCKETCONNECTION():
                         response length always to be more than the 1
                         in order to callback the SOCKET_SEND(arg1,arg2,arg3)
 
-                        SOCKET_SEND(connection=connection, respose=respose)
+                        SOCKET_SEND(conANYtion=conANYtion, respose=respose)
 
-                        args    :   connection[socket]
+                        args    :   conANYtion[socket]
                                     response[from callbackMitel.db]
                         return  : no 
                     """
                     # if (timeit.default_timer() - start )> 10:
 
-                    worker = asyncio.create_task(SOCKET_SEND(connection=connection))    #   DATA WILL SEND TO THE SOCKET 
+                    worker = asyncio.create_task(SOCKET_SEND(conANYtion=conANYtion))    #   DATA WILL SEND TO THE SOCKET 
                     await asyncio.wait_for(worker, timeout=None)
                     # print(timeit.default_timer() - start)
 
@@ -1376,11 +1374,11 @@ async def SOCKETCONNECTION():
     # except Exception as e:
     #     debugInfo(f"RUN SOCKET FUNCTION [CODE LINE] -:{sys._getframe().f_lineno}->{e}")
     # finally:
-    #     connection.close()
+    #     conANYtion.close()
 
 async def run():
     await asyncio.create_task(debugLogging_init())
-    await asyncio.gather(SOCKETCONNECTION())
+    await asyncio.gather(SOCKETCONANYTION())
 
 if __name__ == '__main__':
     asyncio.run(run(), debug=False)
