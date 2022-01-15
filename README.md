@@ -3,7 +3,12 @@ PBX CallBack module : Callback feature will hang up the callers and call them ba
 
 # How to run this program 
 ```
-terminal$python3 main.py
+got to terminal and :
+ python3 main.py
+
+ Example:
+            (virtualEnv) niwantha@inspired:/media/niwantha/EXT4/OSS/pbx$ python3 main.py
+
 
 ```
 
