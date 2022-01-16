@@ -25,7 +25,7 @@ class SipServer:
     '''
     def __init__(self) -> None:
         self.host = "127.0.0.1"
-        self.port = 5060
+        self.port = 5061
         self.SEND_BUF_SIZE = 4096
         self.RECV_BUF_SIZE = 4096
         self.sel = selectors.DefaultSelector()

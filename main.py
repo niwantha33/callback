@@ -217,6 +217,9 @@ def debugInfo(info):
         error_ = "{}->{}".format(date_time, info)
         logging.info(error_)
 
+'''
+
+This function will call once the receipt of even completion msg'''
 #CALLFILE CREATER AND CALLING REST API OF ANY SYSTEM  - FUNCTION BLOCK - (5):FINAL:AFTER RCV
 async def SIP_RCV_READY_UPDATE(callID, cc_SATE):
     #create call file 
@@ -1388,5 +1391,5 @@ async def run():
     await asyncio.gather(SOCKETCONANYTION())
 
 if __name__ == '__main__':
-    # asyncio.run(run(), debug=False)
-    run()
+    asyncio.run(run(), debug=False)
+    # run()
