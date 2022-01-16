@@ -136,16 +136,21 @@ TRANSPORT = 'UDP' # Depend on the remote pbx setting
 MITEL_TGROUP = 3 # depend on the remote server settings
 MITEL_CONTEXT = 'mxone-1.test.com' # context must match with remote pbx
 
+'''
+This section will work as pilot pbx system]
+remote PBX will directly connect with the remote pbx system in inline method
+
+'''
 # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-ANY_PILOT_PORT = 5060
-ANY_PILOT_EXT = 15000  # 15001
-ANY_PILOT_IP = '192.168.1.115'
+ANY_PILOT_PORT = 5060 # This port can be chnaged to any 
+ANY_PILOT_EXT = 15000  # 15001 Take this number as Variable 
+ANY_PILOT_IP = '192.168.1.115' # Where this server runining
 ANY_TGROUP = 3
 ANY_CONTEXT = 'ANY.test.com'
 # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 CONTENT_LENGHT = 0
-EVENT = 'call-completion'
+EVENT = 'call-completion' # There are three events in this case will take one to demo
 CONANYTED_PORT = 0 
 DEBUG = True
 
@@ -154,7 +159,10 @@ SOCKT_TYPE  = 'ANY'
 FLAP = ' '
 FLAP_M = ' '
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-
+'''
+SIP header detials as per the RFC 
+need improvements 
+'''
 #################################################################################################
 SIP = {"METHOD": ['INVITE', 'PRACK', 'ACK', 'SUBSCRIBE', 'NOTIFY', 'SIP/2.0 200 OK', 'BYE', 'OPTIONS', 'REFER'],
        "REMOTE_EXT": 'REMOTE_EXT',
