@@ -103,6 +103,7 @@ SIP URI: (HTTP-like request/response transaction model)
 
 import asyncio
 import hashlib
+import io
 import logging
 import os
 import random
@@ -115,27 +116,25 @@ import ssl
 import sys
 import threading
 import time
+import timeit
 import uuid
 from binascii import hexlify
 from datetime import datetime
-from typing import AsyncIterator
-import io
-import timeit
+# from typing import AsyncIterator
 
-#!<--------------------------SOCKET--------------->!
+#!<--------------------------SOCKET BUFFER SIZE--------------->!
 SEND_BUF_SIZE = 4096
 RECV_BUF_SIZE = 4096
 #!<--------------------------END------------------>!
 
-#!<-------------------SIP HEADER DETAILS---------->!
+#!<-------------------REMOTE PBX DETAILS---------->!
 # REMOTE_EXT = 12000 # Variable
-REMOTE_IP_MITEL = '192.168.1.250'  # '127.0.0.1'#'10.30.44.71'
-REMOTE_PORT_MITEL = 5060
-
+REMOTE_IP_MITEL = '192.168.1.250'  # '127.0.0.1'
+REMOTE_PORT_MITEL = 5060 #SIP PORT
 USER = 'phone'
-TRANSPORT = 'UDP'
-MITEL_TGROUP = 3
-MITEL_CONTEXT = 'mxone-1.test.com'
+TRANSPORT = 'UDP' # Depend on the remote pbx setting
+MITEL_TGROUP = 3 # depend on the remote server settings
+MITEL_CONTEXT = 'mxone-1.test.com' # context must match with remote pbx
 
 # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 ANY_PILOT_PORT = 5060
@@ -1381,4 +1380,5 @@ async def run():
     await asyncio.gather(SOCKETCONANYTION())
 
 if __name__ == '__main__':
-    asyncio.run(run(), debug=False)
+    # asyncio.run(run(), debug=False)
+    run()
