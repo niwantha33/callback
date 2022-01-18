@@ -46,7 +46,7 @@ class SocketConnection:
         self.connection = None
 
     def connection_to_pbx(self):
-        """
+        """Return connection
             This will create the connection to remote server using the params.@parms
             @param
                 ip, port, snd and rcv buffer
@@ -63,18 +63,34 @@ class SocketConnection:
         self.connection.setsockopt(
             socket.SOL_SOCKET, socket.SO_RCVBUF, self.rcv_buffer)
         try:
-
             self.connection.connect((self.remote_ip, self.remote_port))
             connected_port: str = None
             connected_port = int(str(self.connection).split()[6].split(')')[0])
             print(f"CONNECT TO MITEL SERVER THROUGH  PORT NO : {connected_port}")
 
-
         except Exception as e:
+
             print("Exception Error ", e, sep=": ", end='\n')
 
-        return self.connection
+        finally:
+            print("raised exceptions error in connection, Sys exit....")
+            # sys.exit(0) # Use in case of connection fails.
+            return self.connection
 
+
+class SendRcvToRemotePbx:
+    """
+        Once the connection made form socket connection then,
+        this class will handle send and receiving function of the main program
+    """
+
+    def __init__(self, connection):
+        self.connection = connection
+        pass
+
+    def send_to_remote(self):
+        """Return number of sent bytes """
+        print(self.connection)
     # while True:
     #     # This selector will manage the readers TX and Rx availability
     #     readers, xw, xr = select.select([sys.stdin, connection], [], [])
@@ -102,7 +118,9 @@ class SocketConnection:
 
 def main():
     callback = SocketConnection()
-    print(callback.connection_to_pbx())
+    conn = (callback.connection_to_pbx())
+    rx_tx = SendRcvToRemotePbx(conn)
+    rx_tx.send_to_remote()
 
 
 if __name__ == '__main__':
