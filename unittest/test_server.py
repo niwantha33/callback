@@ -3,29 +3,20 @@ import selectors
 
 
 class SipServer:
-    '''
+    """
         #* In order to check echoing use this command with the terminal *#
         Testing Command: nc localhost [port]
 
-        Test server will response with followings; 
-        
-        Test methods (1): 
+        Test server will respond with followings;
+
+        Test methods (1):
 
             responseType == 'SIP/2.0 200 OK'
 
         """
-        {'Via': 'SIP/2.0/UDP [ip]:5060;branch=z9hG4bK-f0e9859ec-9cc5-4a489-8ad3-008768667b561;rport=41886;received=[ip]', 
-        'Contact': '<sip:13400@10.30.44.71:5060>', 
-        'To': '<sip:134@[ip2];user=phone;transport=UDP;tgrp=1;trunk-context=tel.test.com>;tag=40814c42', 
-        'From': '<sip:1501@[ip]>;user=phone;tgrp=1;trunk-context=n1.test.com>;tag=9cc594ra48',
-         'Call-ID': 'f0ee99859c11', 
-         'CSeq': '494113 SUBSCRIBE', 'Expires': '3600', 'User-Agent': 'Aastra SN', 'Content-Length': '0'}      
-        """
-
-    '''
     def __init__(self) -> None:
         self.host = "127.0.0.1"
-        self.port = 5061
+        self.port = 5060
         self.SEND_BUF_SIZE = 4096
         self.RECV_BUF_SIZE = 4096
         self.sel = selectors.DefaultSelector()

@@ -8,7 +8,7 @@ import re
 import select
 import socket
 import socketserver
-import sqlite3
+
 import ssl
 import sys
 import threading
@@ -17,26 +17,19 @@ import timeit
 import uuid
 from binascii import hexlify
 from datetime import datetime
+import selectors
+
 
 # !<--------------------------SOCKET BUFFER SIZE--------------->!
 
-sendBuffer = 4096
-rcvBuffer = 4096
-# !<--------------------------END------------------>!
-# Global Variables for test connection.
-mitel_ip = '127.0.0.1'
-mitel_port = 5061  # SIP PORT
-mitel_userType = 'phone'
-mitel_transportType = 'UDP'  # Depend on the remote pbx setting
-mitel_group = 3  # depend on the remote server settings
-mitel_context = 'mxone-1.test.com'  # context must match with remote pbx
 
 
 class SocketConnection:
     """
         Setting socket connection to the remote server
-        {Mitel, Alcotel, Asterisk etc..}
+        {Mitel, Allcatel, Asterisk etc..}
     """
+
     def __init__(self, remote_ip: str = "127.0.0.1", remote_port: int = 5060, snd_buffer: int = 4096,
                  rcv_buffer: int = 4096) -> None:
         self.remote_ip = remote_ip
@@ -64,64 +57,78 @@ class SocketConnection:
             socket.SOL_SOCKET, socket.SO_RCVBUF, self.rcv_buffer)
         try:
             self.connection.connect((self.remote_ip, self.remote_port))
-            connected_port: str = None
-            connected_port = int(str(self.connection).split()[6].split(')')[0])
+            connected_port: int = int(str(self.connection).split()[6].split(')')[0])
             print(f"CONNECT TO MITEL SERVER THROUGH  PORT NO : {connected_port}")
 
         except Exception as e:
-
+            print("raised exceptions error in connection, Sys exit....")
             print("Exception Error ", e, sep=": ", end='\n')
 
         finally:
-            print("raised exceptions error in connection, Sys exit....")
             # sys.exit(0) # Use in case of connection fails.
             return self.connection
 
 
-class SendRcvToRemotePbx:
+class SndRcvToRemotePbx:
     """
         Once the connection made form socket connection then,
         this class will handle send and receiving function of the main program
     """
 
-    def __init__(self, connection):
-        self.connection = connection
-        pass
+    def __init__(self, connection) -> None:
+        if connection is None:
+            sys.exit(1)
+        else:
+            self.connection = connection
 
-    def send_to_remote(self):
-        """Return number of sent bytes """
+    def snd_rcv(self, rcv_buffer: int = 4096):
+        """Socket data stream handler """
         print(self.connection)
-    # while True:
-    #     # This selector will manage the readers TX and Rx availability
-    #     readers, xw, xr = select.select([sys.stdin, connection], [], [])
-    #
-    #     for r in readers:  # While connection mode -> Selector will allow send data to Server
-    #
-    #         if r is connection:
-    #             """
-    #             RCV_HANDLER(RECEIVED DATA)
-    #             Function Name   : RCV_HANDLER
-    #             args            : Receving data from Mitel Server
-    #             Buffer Size     : SEND_BUF_SIZE
-    #             Parsing Data    : data (Byte Mode)
-    #             return          : NO
-    #             Parsing function to Asynic mode in order to operate the main function in mode of damean
-    #             """
-    #             data = connection.recv(SEND_BUF_SIZE)
-    #             if len(data) > 0:
-    #                 print(data)
-    #         else:
-    #             msg = "Hello wolrd".encode()
-    #             connection.sendall(msg)
-    #             time.sleep(2)
+        cnt: int = 0
+        try:
+            while True:
+                # This selector will manage the readers TX and Rx availability
+                readers, xw, xr = select.select([sys.stdin, self.connection], [], [])
+                cnt = cnt + 1
+                print(f"Speed count :{cnt}")
+                for r in readers:
+                    """
+                        There are two modes in the r :
+                           Reader Write Mode: <socket.socket fd=3, family=AddressFamily.AF_INET, 
+                                                type=SocketKind.SOCK_STREAM, proto=6, laddr=('127.0.0.1', 47456), 
+                                                raddr=('127.0.0.1', 5060)>
+                           Reader Read Mode:
+                                            <_io.TextIOWrapper name='<stdin>' mode='r' encoding='utf-8'>              
+
+                    """
+                    if r is self.connection:
+                        """Socket will allowed to send data to remote server."""
+                        data = self.connection.recv(rcv_buffer)
+                        if len(data) > 0:
+                            print(data)
+                    else:  # <_io.TextIOWrapper name='<stdin>' mode='r' encoding='utf-8'>
+                        msg = "Hello world".encode()
+                        self.connection.sendall(msg)
+                        # time.sleep(2)
+        except Exception as e:
+            print(e)
 
 
 def main():
+    # Global Variables for test connection.
+    mitel_ip = '127.0.0.1'
+    mitel_port = 5061  # SIP PORT
+    mitel_userType = 'phone'
+    mitel_transportType = 'UDP'  # Depend on the remote pbx setting
+    mitel_group = 3  # depend on the remote server settings
+    mitel_context = 'mxone-1.test.com'  # context must match with remote pbx
+
     callback = SocketConnection()
     conn = (callback.connection_to_pbx())
-    rx_tx = SendRcvToRemotePbx(conn)
-    rx_tx.send_to_remote()
+    rx_tx = SndRcvToRemotePbx(conn)
+    rx_tx.snd_rcv()
 
 
 if __name__ == '__main__':
-    main()
+    for i in range(2):
+        main()
