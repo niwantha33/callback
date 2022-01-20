@@ -18,10 +18,10 @@ import uuid
 from binascii import hexlify
 from datetime import datetime
 import selectors
+from callback_db import DatabaseHandler
 
 
 # !<--------------------------SOCKET BUFFER SIZE--------------->!
-
 
 
 class SocketConnection:
@@ -107,14 +107,19 @@ class SndRcvToRemotePbx:
                         if len(data) > 0:
                             print(data)
                     else:  # <_io.TextIOWrapper name='<stdin>' mode='r' encoding='utf-8'>
-                        msg = "Hello world".encode()
-                        self.connection.sendall(msg)
+                        x = DatabaseHandler()
+                        msg = x.get_callback_ext()
+                        self.connection.sendall(str(msg).encode())
+                        sys.exit(1)
                         # time.sleep(2)
         except Exception as e:
             print(e)
 
 
 def main():
+    """
+    Main setup
+    """
     # Global Variables for test connection.
     mitel_ip = '127.0.0.1'
     mitel_port = 5061  # SIP PORT
@@ -122,13 +127,13 @@ def main():
     mitel_transportType = 'UDP'  # Depend on the remote pbx setting
     mitel_group = 3  # depend on the remote server settings
     mitel_context = 'mxone-1.test.com'  # context must match with remote pbx
-
+    conn_to_db = DatabaseHandler();
+    conn_to_db.get_callback_ext()
     callback = SocketConnection()
     conn = (callback.connection_to_pbx())
     rx_tx = SndRcvToRemotePbx(conn)
-    rx_tx.snd_rcv()
+    print(rx_tx.snd_rcv())
 
 
 if __name__ == '__main__':
-    for i in range(2):
-        main()
+    main()

@@ -34,11 +34,14 @@ class DatabaseHandler:
             print(f"callback.db Connection Error :{e}")
         pass
 
-    def get_callback_ext(self):
+    def get_callback_ext(self) -> list:
         """
             This function will get  caller and callee ext numbers from  .db
             """
+        data_list: list = []
         if not self.conn.in_transaction:
-            request_data = "SELECT * FROM callback"
-            for data in  self.cur.execute(request_data):
-                print(data)
+            request_data = "SELECT * FROM 'cbregistry';"
+
+            data_list = [ data for data in  self.cur.execute(request_data)]
+
+        return data_list
